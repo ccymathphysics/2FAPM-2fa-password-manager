@@ -7,10 +7,14 @@
 
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QTextEdit, QMessageBox, QApplication
+    QTextEdit, QMessageBox
 )
 from PyQt5.QtCore import Qt
-import pyperclip  # 用于复制到剪贴板
+try:
+    import pyperclip  # 用于复制到剪贴板
+    PYPERCLIP_AVAILABLE = True
+except ImportError:
+    PYPERCLIP_AVAILABLE = False
 
 from core.language import get_language_manager
 
@@ -98,6 +102,14 @@ class PasswordDetailDialog(QDialog):
     
     def copy_password(self):
         """复制密码到剪贴板"""
+        if not PYPERCLIP_AVAILABLE:
+            QMessageBox.critical(
+                self, 
+                self.lang_manager.get_text("error"), 
+                "pyperclip库不可用，无法复制到剪贴板"
+            )
+            return
+            
         try:
             pyperclip.copy(self.real_password)
             QMessageBox.information(

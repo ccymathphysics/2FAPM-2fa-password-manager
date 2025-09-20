@@ -13,17 +13,23 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent
 sys.path.insert(0, str(project_root))
 
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMessageBox
 from ui.main_window import MainWindow
 from config.settings import APP_TITLE
+from core.database import get_database
 
 def main():
     """主函数"""
     app = QApplication(sys.argv)
     app.setApplicationName(APP_TITLE)
     
-    # 创建并显示主窗口
+    # 获取数据库实例
+    db = get_database()
+    
+    # 创建主窗口
     window = MainWindow()
+    
+    # 显示主窗口
     window.show()
     
     # 运行应用
